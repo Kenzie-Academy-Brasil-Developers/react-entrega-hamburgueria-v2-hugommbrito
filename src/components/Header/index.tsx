@@ -14,7 +14,7 @@ interface iHeaderProps{
 }
 
 export const Header = ({ filter }: iHeaderProps) => {
-    const { setCartVisibility, cartList } = useContext(CartContext)
+    const { setCartVisibility, cartQnt } = useContext(CartContext)
     const navigate = useNavigate()
 
     const logoutFunction = () => {
@@ -29,17 +29,20 @@ export const Header = ({ filter }: iHeaderProps) => {
                     src={logo} 
                     alt="Logo Burguer Kenzie"
                     />
-                <div>
+                <div className="nav">
                     <StyledInput
                         type="text" 
                         placeholder="Digitar Pesquisa"
                         onChange={(e) => filter(e.target.value)}
                     />
+                    <div className="icons">
+
                     <div className="cartIcon">
                         <ShoppingCartRounded color="disabled" onClick={() => setCartVisibility('visible')}/>
-                        <p>{cartList.length}</p>
+                        <p>{ cartQnt }</p>
                     </div>
                     <LogoutRounded color="disabled" onClick={logoutFunction} />
+                    </div>
                 </div>
 
             </div>

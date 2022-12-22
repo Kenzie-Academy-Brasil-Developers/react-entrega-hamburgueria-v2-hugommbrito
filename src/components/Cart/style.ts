@@ -55,6 +55,30 @@ export const StyledCartCard = styled.div`
 
     display: flex;
     justify-content: space-between;
+
+    &>div>div{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .counter{
+        display: flex;
+
+        button{
+            padding: 0 5px;
+            background-color: var(--color-grey-3);
+            border: 2px solid var(--color-grey-3);
+            color: red;
+            font-size: 14px;
+        }
+        
+        p{
+            padding: 0 10px;
+            border: 2px solid var(--color-grey-3);
+            color: var(--color-grey-1);
+        }
+    }
     
     & > div{
         display: flex;

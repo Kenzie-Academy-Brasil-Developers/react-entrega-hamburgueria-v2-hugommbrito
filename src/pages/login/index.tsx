@@ -1,28 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import  TextField  from '@mui/material/TextField'
 import { useNavigate } from "react-router-dom";
-import{ useForm, SubmitHandler } from 'react-hook-form'
-import * as yup from 'yup'
+
+import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { iData } from "../../contexts/UserContext/types";
 
 import { StyledLogin } from "./style";
 import { LoginMessageDiv } from "../../components/loginMessageTag";
 import { StyledText } from "../../styles/fonts";
 import { StyledButton } from "../../styles/Buttons";
-import { api } from "../../services/api";
-import { toast } from "react-toastify";
+
 
 import logo from "../../../src/assets/BurguerKenzieLogo.png"
 import dotsBlock from "../../../src/assets/dots-block.svg"
+import { UserContext } from "../../contexts/UserContext";
 
-interface iData{
-    email: string;
-    password: string;
-}
 
 export const Login = () => {
     const navigate = useNavigate()
-
+    const { submitFunction } = useContext(UserContext)
+    
     const formSchema = yup.object().shape({
         email: yup.string().required('Campo obrigatório'),
         password: yup.string().required('Campo obrigatório'),
@@ -32,29 +31,6 @@ export const Login = () => {
         mode: "onBlur",
         resolver: yupResolver(formSchema)
     })
-
-    const submitFunction: SubmitHandler<iData> = async (data) => {
-        console.log('cheguei aqui 1');
-        try {
-            console.log('cheguei aqui 2');
-            const response = await api.post('login', data)
-            console.log('cheguei aqui 3');
-
-            toast.success('Login realizado com sucesso!', { position: "bottom-right", autoClose: 2500, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", })
-
-            if (response.data.accessToken) {
-                localStorage.setItem('@TOKEN:', response.data.accessToken)
-                navigate('/home')
-
-            } else {
-                toast.error(response.data, {position: "bottom-right", autoClose: 2500, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
-            }
-
-        } catch (error) {
-            console.error(error);
-            toast.error(`Algo deu errado com a sua requisição, Tente mais tarde`, {position: "bottom-right", autoClose: 2500, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
-        }
-    } 
 
     return (
         <StyledLogin>

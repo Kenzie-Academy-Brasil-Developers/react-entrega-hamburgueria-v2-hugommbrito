@@ -26,6 +26,7 @@ export const StyledHeader = styled.div`
 
                 height: 15px;
                 width: 13px;
+                padding: 1px;
                 border-radius: 3px;
                 background-color: var(--color-primary);
                 text-align: center;
@@ -43,6 +44,17 @@ export const StyledHeader = styled.div`
         .container{
             flex-direction: column;
             gap: 20px;
+        }
+
+        .nav{
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+        }
+
+        input{
+            width: 90%;
+            max-width: 90%;
         }
 
     }

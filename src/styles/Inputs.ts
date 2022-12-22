@@ -20,6 +20,6 @@ export const StyledInput = styled.input`
     }
 
     @media (max-width: 950px){
-        width: 90vw;
+        width: 50rem;
     }
 `

@@ -8,13 +8,9 @@ import { StyledCartCotnainer, StyledCartTop, StyledCartCard, StyledCartTotal } f
 
 
 export const Cart = () => {
-    const { cartVisibility, setCartVisibility, cartList, cartTotal, setCartList, setCartTotal } = useContext(CartContext)
+    const { cartVisibility, setCartVisibility, cartList, cartTotal, setCartList, setCartTotal, addProductoToCart, removeFromCart } = useContext(CartContext)
 
-    const removeFromCart = (id: number | string) => {
-        const listWithoutClickedItem = cartList.filter(item => item.id !== +id)
-        setCartList(listWithoutClickedItem)
 
-    }
 
     return (
         <StyledCartCotnainer display={cartVisibility} >
@@ -30,10 +26,14 @@ export const Cart = () => {
                                 <img src={product.img} alt="" />
                                 <div>
                                     <h4>{product.name}</h4>
-                                    <p>{product.category}</p>
+                                    <div className="counter">
+                                        <button onClick={() => removeFromCart(product)} >-</button>
+                                        <p>{product.qnt}</p>
+                                        <button onClick={() => addProductoToCart(product)} >+</button>
+                                    </div>
                                 </div>
                             </div>
-                            <Delete id={`${product.id}`} onClick={(e) => removeFromCart((e.currentTarget as SVGSVGElement).id)} color='disabled'/>
+                            <Delete id={`${product.id}`} onClick={() => removeFromCart(product)} color='disabled'/>
                         </StyledCartCard>
                     )
                 })

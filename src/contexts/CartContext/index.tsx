@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { createContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +13,7 @@ export const CartContextProvider = ({ children }: iContextProviderProps) => {
   const [filteredList, setFilteredList] = useState([] as iProduct[]);
   const [cartTotal, setCartTotal] = useState<number>(0);
   const [cartList, setCartList] = useState([] as iProduct[]);
+  const [cartQnt, setCartQnt] = useState<number>(0);
   const [cartVisibility, setCartVisibility] = useState<'hidden' | 'visible'>('hidden');
   const navigate = useNavigate()
 
@@ -64,9 +66,12 @@ export const CartContextProvider = ({ children }: iContextProviderProps) => {
   };
 
   const addProductoToCart = (product: iProduct) => {
-      const isProductNew = cartList.find(e => e.id === product.id)
+      const productIndex = cartList.findIndex(e => e.id === product.id)
 
-    if(!isProductNew){
+
+    if(productIndex == -1){
+      product.qnt = 1
+
       const newCartList = [...cartList, product]
       setCartList(newCartList)  
 
@@ -75,22 +80,41 @@ export const CartContextProvider = ({ children }: iContextProviderProps) => {
       );
 
     } else {
-      toast.error(`Vá com calma, guloso! ${product.name} já está no carrinho! 😋`,
-        {position: "bottom-right", autoClose: 2500, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", }
-      );
+      const productInCart = cartList.splice(productIndex, 1)
+      productInCart[0].qnt! += 1
+      setCartList([...cartList, productInCart[0]])
         
     }
 
   }
     
+  const removeFromCart = (product: iProduct) => {
+    const clickedProduct = cartList.find(prodInCart => prodInCart.id == product.id)
+
+    if(clickedProduct!.qnt! <= 1){
+        const listWithoutClickedItem = cartList.filter(item => item.id !== product.id)
+        setCartList(listWithoutClickedItem)
+
+    } else {
+        const clickedProdIndex = cartList.findIndex(prodInCart => prodInCart.id == product.id)
+
+        const reduceQnt = cartList.splice(clickedProdIndex, 1)
+        reduceQnt[0].qnt! -= 1
+
+        setCartList([...cartList, reduceQnt[0]])
+    }
+  }
+
   useEffect(() => {
-    const newTotal = cartList.reduce((acc, curr) => ((acc) + curr.price), 0)
+    const newTotal = cartList.reduce((acc, curr) => ((acc) + (curr.price * curr.qnt!)), 0)
+    const newQntTotal = cartList.reduce((acc, curr) => ((acc) + curr.qnt!), 0)
 
     setCartTotal(newTotal)
+    setCartQnt(newQntTotal)
   }, [cartList])
   
   return (
-    <CartContext.Provider value={{productList, filterList, filteredList, addProductoToCart, setCartTotal, setCartList, cartList, cartTotal, cartVisibility, setCartVisibility }} >
+    <CartContext.Provider value={{productList, filterList, filteredList, addProductoToCart, setCartTotal, setCartList, cartList, cartTotal, cartVisibility, setCartVisibility, removeFromCart, cartQnt }} >
       {children}
     </CartContext.Provider>
   )

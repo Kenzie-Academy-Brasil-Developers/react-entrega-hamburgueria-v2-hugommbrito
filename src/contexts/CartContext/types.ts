@@ -13,6 +13,8 @@ export interface iCartProviderValue{
     cartTotal: number;
     cartVisibility: 'hidden' | 'visible';
     setCartVisibility: (value: 'hidden' | 'visible') => void;
+    removeFromCart: (product: iProduct) => void;
+    cartQnt: number
 }
 
 export interface iProduct {
@@ -21,4 +23,5 @@ export interface iProduct {
     category: string;
     price: number;
     img: string;
+    qnt?: number;
   }
